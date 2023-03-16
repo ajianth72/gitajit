@@ -8,35 +8,46 @@
 </head>
 <body>
     <form onsubmit="saveToLocalStorage(event)" >
-        <label for="">Name</label>
-        <input type="text" name="username">
-        <label for="">email</label>
-        <input type="email" name="emailId">
-        <label for="">phonenumber</label>
-        <input type="tel" name="phonenumber">
-        <button>Submit</button>
-
+        <label for="username">Name</label>
+        <input type="text" name="username" id="username">
+        <label for="emailId">email</label>
+        <input type="email" name="emailId" id="emailId">
+        <label for="phonenumber">phonenumber</label>
+        <input type="tel" name="phonenumber" id="phonenumber">
+        <button type="submit">Submit</button>
     </form>
+    <ul id="listOfitems"></ul>
     <script>
         function saveToLocalStorage(event){
             event.preventDefault();
-            const name=event.target.username.value;
-            const email=event.target.emailId.value;
-            const phonenumber = event.target.phonenumber.value;
+            const name = document.getElementById('username').value;
+            const email = document.getElementById('emailId').value;
+            const phonenumber = document.getElementById('phonenumber').value;
 
             const obj ={
                 name,
                 email,
                 phonenumber
             }
-            localStorage.setItem('userDetails',JSON.stringify(obj))
-
+            localStorage.setItem(email,JSON.stringify(obj));
+            showUserOnScreen(obj);
         }
         function showUserOnScreen(obj){
-            const parentElement=document.getElementById('listOfitems')
-            parentElement.innerHTML=parentElement.innerHTML + `<li>${obj.name} - ${obj.email} - ${obj.phonenumber}</li>`;
+            const parentElement = document.getElementById('listOfitems');
+            const childElement = document.createElement('li');
+            childElement.textContent = obj.name + " - " + obj.email + ' - ' + obj.phonenumber;
+            const deleteButton = document.createElement('input');
+            deleteButton.type = "button";
+            deleteButton.value = 'Delete';
+            deleteButton.onclick = () => {
+                localStorage.removeItem(obj.email);
+                parentElement.removeChild(childElement);
+            };
+            childElement.appendChild(deleteButton);
+            parentElement.appendChild(childElement);
         }
     </script>
 </body>
 </html>
+
 
