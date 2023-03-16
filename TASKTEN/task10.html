@@ -23,9 +23,6 @@
             const name=event.target.username.value;
             const email=event.target.emailId.value;
             const phonenumber = event.target.phonenumber.value;
-            localStorage.setItem('name',name)
-            localStorage.setItem('email',email)
-            localStorage.setItem('phonenumber',phonenumber)
 
             const obj ={
                 name,
@@ -35,6 +32,11 @@
             localStorage.setItem('userDetails',JSON.stringify(obj))
 
         }
+        function showUserOnScreen(obj){
+            const parentElement=document.getElementById('listOfitems')
+            parentElement.innerHTML=parentElement.innerHTML + `<li>${obj.name} - ${obj.email} - ${obj.phonenumber}</li>`;
+        }
     </script>
 </body>
 </html>
+
