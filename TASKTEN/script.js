@@ -1,99 +1,85 @@
-function createPost(post) {
+console.log('person1: shows ticket');
+console.log('person2: shows ticket');
 
-    // return a promise that resolves after 1 second with the created post
-   
-    return new Promise((resolve, reject) => {
-   
-     setTimeout(() => {
-   
-      console.log(`Post "${post}" created`);
-   
-      resolve(post);
-   
-     }, 1000);
-   
-    });
-   
-   }
-   
-   
-   
-   function updateLastUserActivityTime(user) {
-   
-    // return a promise that resolves after 1 second with the updated user object
-   
-    return new Promise((resolve, reject) => {
-   
-     setTimeout(() => {
-   
-      user.lastActivityTime = new Date();
-   
-      console.log(`User "${user.name}" last activity time updated to ${user.lastActivityTime}`);
-   
-      resolve(user);
-   
-     }, 1000);
-   
-    });
-   
-   }
-   
-   
-   
-   function deletePost(post) {
-   
-    // return a promise that resolves after 1 second with the deleted post
-   
-    return new Promise((resolve, reject) => {
-   
-     setTimeout(() => {
-   
-      console.log(`Post "${post}" deleted`);
-   
-      resolve(post);
-   
-     }, 1000);
-   
-    });
-   
-   }
-   
-   
-   
-   // usage example
-   
-   const user = { name: "John", lastActivityTime: null, posts: [] };
-   
-   
-   
-   createPost("Hello world")
-   
-    .then((post) => {
-   
-     user.posts.push(post);
-   
-     return updateLastUserActivityTime(user);
-   
-    })
-   
-    .then((updatedUser) => {
-   
-     console.log("All posts created:");
-   
-     console.log(updatedUser.posts);
-   
-     return deletePost(updatedUser.posts[updatedUser.posts.length - 1]);
-   
-    })
-   
-    .then((deletedPost) => {
-   
-     const updatedPosts = user.posts.filter((post) => post !== deletedPost);
-   
-     console.log("New set of posts:");
-   
-     console.log(updatedPosts);
-   
-    })
-   
-    .catch((error) => console.error(error));
+const promiseWifeBringingTicks = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('ticket');
+  }, 3000);
+});
+
+const getPopcorn = promiseWifeBringingTicks.then((t) => {
+  console.log('wife: i have the tickets');
+  console.log('husband: we should go in');
+  console.log('wife: no, I am hungry');
+
+  return new Promise((resolve, reject) => {
+    resolve(`${t} popcorn`);
+  });
+});
+
+const getButter = getPopcorn.then((t) => {
+  console.log('husband: I got some popcorn');
+  console.log('husband: we should go in');
+  console.log('wife: I need butter on my popcorn');
+
+  return new Promise((resolve, reject) => {
+    resolve(`${t} with butter`);
+  });
+});
+
+const getColdDrinks = getButter.then((t) => {
+  console.log('husband: I got the butter on the popcorn');
+  console.log('husband: do you want any cold drinks, dear?');
+
+  return new Promise((resolve, reject) => {
+    resolve(`${t} and cold drinks`);
+  });
+});
+
+getColdDrinks.then((t) => {
+  console.log(t);
+});
+
+// Using async/await
+
+(async () => {
+  console.log('person1: shows ticket');
+  console.log('person2: shows ticket');
+
+  const promiseWifeBringingTicks = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve('ticket');
+    }, 3000);
+  });
+
+  const t1 = await promiseWifeBringingTicks;
+  console.log('wife: i have the tickets');
+  console.log('husband: we should go in');
+  console.log('wife: no, I am hungry');
+
+  const t2 = `${t1} popcorn`;
+  console.log('husband: I got some popcorn');
+  console.log('husband: we should go in');
+  console.log('wife: I need butter on my popcorn');
+
+  const t3 = `${t2} with butter`;
+  console.log('husband: I got the butter on the popcorn');
+  console.log('husband: do you want any cold drinks, dear?');
+
+  const t4 = `${t3} and cold drinks`;
+
+  const getColdDrinks = new Promise((resolve, reject) => {
+    resolve(t4);
+  });
+
+  console.log(await getColdDrinks);
+})();
+
+// Handling Promise.all with async/await
+
+(async () => {
+  const promises = [
+    new Promise(resolve => setTimeout(() => resolve(1), 3000)),
+    new Promise(resolve => setTimeout(() => resolve(2), 2000)),
+    new Promise(resolve => setTimeout(() => resolve(3), 1000))
+  ]})
