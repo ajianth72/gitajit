@@ -114,6 +114,24 @@
 
 
 
+
+
+        axios.delete("https://crudcrud.com/api/9e2e6f3c9872480ca65a36c43305352e/appointmentData/641d2a3a22534003e8c90ae2")
+
+ .then((response) => {
+
+     showUserOnScreen(response.data);
+
+ })
+
+ .catch((err)=>{
+
+     console.log(err)
+
+})
+
+
+
         function showUserOnScreen(obj){
 
             const parentElement = document.getElementById('listOfitems');
