@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Product List</title>
+    <script>
+      async function saveProduct() {
+        var product = document.getElementById("product").value;
+        var price = document.getElementById("price").value;
+
+        // get existing products from local storage
+        var productList = await getProductList();
+
+        // add new product
+        productList.push({ product: product, price: price });
+
+        // store updated product list in local storage
+        await setProductList(productList);
+
+        // reset form fields
+        document.getElementById("product").value = "";
+        document.getElementById("price").value = "";
+
+        // refresh product list
+        displayProductList();
+      }
+
+      async function displayProductList() {
+        var productList = await getProductList();
+        var total = 0;
+
+        var tableBody = document.getElementById("product-list");
+        tableBody.innerHTML = "";
+
+        for (var i = 0; i < productList.length; i++) {
+          var product = productList[i];
+          var row = tableBody.insertRow(i);
+
+          var productCell = row.insertCell(0);
+          productCell.innerHTML = product.product;
+
+          var priceCell = row.insertCell(1);
+          priceCell.innerHTML = "$" + product.price;
+
+          total += parseFloat(product.price);
+
+          var editCell = row.insertCell(2);
+          editCell.innerHTML =
+            "<button onclick='editProduct(" + i + ")'>Edit</button>";
+
+          var deleteCell = row.insertCell(3);
+          deleteCell.innerHTML =
+            "<button onclick='deleteProduct(" +
+            i +
+            ")'>Delete</button>";
+        }
+
+        var totalCell = tableBody.insertRow(productList.length).insertCell(0);
+        totalCell.innerHTML = "Total:";
+        var totalAmountCell = tableBody
+          .rows[productList.length]
+          .insertCell(1);
+        totalAmountCell.innerHTML = "$" + total.toFixed(2);
+      }
+
+      async function editProduct(index) {
+        var productList = await getProductList();
+        var product = productList[index];
+        document.getElementById("product").value = product.product;
+        document.getElementById("price").value = product.price;
+        productList.splice(index, 1);
+        await setProductList(productList);
+        displayProductList();
+      }
+
+      async function deleteProduct(index) {
+        var productList = await getProductList();
+        productList.splice(index, 1);
+        await setProductList(productList);
+        displayProductList();
+      }
+
+      async function getProductList() {
+        var productList = await new Promise((resolve) => {
+          var data = localStorage.getItem("productList");
+          resolve(JSON.parse(data) || []);
+        });
+        return productList;
+      }
+
+      async function setProductList(productList) {
+        await new Promise((resolve) => {
+          localStorage.setItem("productList", JSON.stringify(productList));
+          resolve();
+        });
+      }
+    </script>
+  </head>
+  <body onload="displayProductList()">
+    <form>
+      <label for="product">Product:</label>
+      <input type="text" id="product" name="product" />
+
+      <label for="price">Price:</label>
+      <input type="number" id="price" name="price" />
+
+      <button type="button" onclick="saveProduct()">Add</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody id="product-list"></tbody>
+    </table>
+  </body>
+  </html>
